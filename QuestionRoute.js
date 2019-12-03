@@ -11,9 +11,6 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 
-
-
-
 router.use(function (req, res, next) {
     console.log("questions main route")
     next()
@@ -64,6 +61,7 @@ router.delete('/DelQ', function (req, res) {
 //POST RREQUEST FOR QUESTIONS
 
 router.post('/PostQ', function (req, res) {
+
     let question = req.body.question
     let userID = req.body.userID
     con.connect(function (err) {
@@ -73,6 +71,17 @@ router.post('/PostQ', function (req, res) {
         })
     })
 
+})
+
+//PUT REQUEST FOR QUESTIONS
+router.put('/UpdateQ', function (req, res) {
+    let updQ = req.body.updQ
+    let q_id = req.body.q_id
+    con.connect(function (err) {
+        con.query(`UPDATE questions SET question = "${updQ}" WHERE q_id = ${q_id}`, function (err, results) {
+            res.send(results)
+        })
+    })
 })
 
 module.exports = router
