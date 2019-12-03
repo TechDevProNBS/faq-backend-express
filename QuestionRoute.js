@@ -63,7 +63,7 @@ router.delete('/DelQ', function (req, res) {
 
 //POST RREQUEST FOR QUESTIONS
 
-router.post('/postQ', function (req, res) {
+router.post('/PostQ', function (req, res) {
     let question = req.body.question
     let userID = req.body.userID
     con.connect(function (err) {
