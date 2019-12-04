@@ -18,8 +18,8 @@ router.use(function (req, res, next) {
 
 //get requests for answers in order of highest rating
 
-router.get('/RecentA', function (req, res) {
-    let q_id = req.body.q_id
+router.get('/RecentA/:q_id', function (req, res) {
+    let q_id = req.params.q_id
     con.connect(function (err) {
         con.query(`select * from answers a LEFT JOIN answerrating ar ON a.a_id = ar.a_id WHERE a.q_id = ${q_id} ORDER by ar.rating desc`, function (err, results) {
             res.send(results)
