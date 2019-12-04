@@ -28,10 +28,26 @@ router.post('/PostC',function(req,res){
     })
 })
 //PUT REQUEST FOR COMMENTS
-
+router.put('/UpdateC',function(req,res){
+    let updC = req.body.updC
+    let c_id = req.body.c_id
+    con.connect(function(err){
+        con.query(`update comments set comment = '${updC}' where c_id = ${c_id}`,function(err,results){
+            if(err){console.log(err)}
+            res.send({"Update":"completed"})
+        })
+    })
+})
 
 //GET REQUEST FOR COMMENTS
-
+router.get('/GetC',function(req,res){
+    let a_id = req.body.a_id
+    con.connect(function(err){
+        con.query(`select * from comments where a_id = ${a_id}`,function(err,results){
+            res.send(results)
+        })
+    })
+})
 
 //DELETE REQUEST FOR COMMENTS
 router.delete('/DelC',function(req,res){
@@ -42,3 +58,5 @@ router.delete('/DelC',function(req,res){
         })
     })
 })
+
+module.exports = router
