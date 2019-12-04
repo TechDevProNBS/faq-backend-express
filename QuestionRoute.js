@@ -47,10 +47,13 @@ router.get('/TopRatedQ', function (req, res) {
     })
 })
 
-//DELETE REQUEST FOR QUESTIONS
+//DELETE REQUEST FOR QUESTIONS DELETING FROM RATING TABLE FIRST
 router.delete('/DelQ', function (req, res) {
     let q_id = req.body.q_id
     con.connect(function (err) {
+        con.query(`delete from questionrating where q_id = ${q_id}`, function (err, results) {
+
+        })
         con.query(`delete from questions where q_id = ${q_id}`, function (err, results) {
             res.send({ response: "question deleted" })
         })
