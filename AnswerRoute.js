@@ -34,7 +34,7 @@ router.delete('/DelA', function (req, res) {
         con.query(`delete from answerrating where a_id = ${a_id}`, function (err, results) {
         })
         con.query(`delete from answers where a_id = ${a_id}`, function (err, results) {
-            res.send({ response: "answer deletedw" })
+            res.send({ response: "answer deleted" })
         })
     })
 })
