@@ -17,6 +17,26 @@ router.use(function (req, res, next) {
 })
 //GET REQUESTS FOR QUESTIONS
 //get request for most recent questions
+ 
+
+router.get('/SearchQ',function(req,res){
+    let stringSearch = req.body.search
+    let word = stringSearch.split(' ')
+    let url = `select * from questions where question like '%${word[0]}%'`
+    
+    for(let i = 1; i<=word.length;i++){
+        url = url + ` or question like '%${word[i]}%'`
+        console.log(url)
+    }
+    con.connect(function(err){
+            con.query(url,function(err,results){
+                console.log("it worked "+results)
+                res.send(results)
+            })
+
+
+    })
+})
 
 router.get('/RecentQ', function (req, res) {
     con.connect(function (err) {
