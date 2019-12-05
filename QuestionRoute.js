@@ -17,22 +17,27 @@ router.use(function (req, res, next) {
 })
 //GET REQUESTS FOR QUESTIONS
 //get request for most recent questions
- 
 
-router.get('/SearchQ',function(req,res){
-    let stringSearch = req.body.search
+
+
+
+
+router.get('/SearchQ/:query', function (req, res) {
+    let stringSearch = req.params.query
     let word = stringSearch.split(' ')
-    let url = `select * from questions where question like '%${word[0]}%'`
-    
-    for(let i = 1; i<=word.length;i++){
-        url = url + ` or question like '%${word[i]}%'`
-        console.log(url)
+    word = word.filter(function (item) {
+        return !filterCheck.includes(item);
+    })
+    let url = `select * from questions where question like '% ${word[0]}%'`
+    for (let i = 1; i < word.length; i++) {
+        url = url + ` or question like '% ${word[i]}%'`
     }
-    con.connect(function(err){
-            con.query(url,function(err,results){
-                console.log("it worked "+results)
-                res.send(results)
-            })
+    console.log(url)
+    con.connect(function (err) {
+        con.query(url, function (err, results) {
+            console.log("it worked " + results)
+            res.send(results)
+        })
 
 
     })
@@ -93,8 +98,8 @@ router.post('/PostQ', function (req, res) {
             if (err) { console.log(err) }
             res.send(results)
             returnedID = results.insertId
-            con.query(`insert into questionrating values(${returnedID},${userID},0,CURRENT_TIMESTAMP())`,function(err,results){
-                if(err){console.log(err)}
+            con.query(`insert into questionrating values(${returnedID},${userID},0,CURRENT_TIMESTAMP())`, function (err, results) {
+                if (err) { console.log(err) }
             })
         })
     })
@@ -111,6 +116,12 @@ router.put('/UpdateQ', function (req, res) {
         })
     })
 })
+
+
+
+
+const filterCheck = ["the", "is", "this", "and", "why", "a", "our"]
+
 
 module.exports = router
 
