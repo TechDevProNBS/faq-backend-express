@@ -87,10 +87,15 @@ router.post('/PostQ', function (req, res) {
 
     let question = req.body.question
     let userID = req.body.userID
+    var returnedID = "";
     con.connect(function (err) {
         con.query(`insert into questions values(0,'${question}',${userID},CURRENT_TIMESTAMP())`, function (err, results) {
             if (err) { console.log(err) }
             res.send(results)
+            returnedID = results.insertId
+            con.query(`insert into questionrating values(${returnedID},${userID},0,CURRENT_TIMESTAMP())`,function(err,results){
+                if(err){console.log(err)}
+            })
         })
     })
 
