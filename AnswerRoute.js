@@ -55,11 +55,18 @@ router.post('/PostA', function (req, res) {
     let answer = req.body.answer
     let q_id = req.body.q_id
     let u_id = req.body.u_id
+    var returnedID = ""
     con.connect(function (err) {
         con.query(`insert into answers values(0,'${answer}','${u_id}','${q_id}',CURRENT_TIMESTAMP())`, function (err, results) {
             if (err) { console.log(err) }
             res.send(results)
+            returnedID = results.insertId
+            console.log(returnedID)
+            con.query(`insert into answerrating values(${returnedID},${u_id},0,current_timestamp())`, function (err, results) {
+                if (err) { console.log }
+            })
         })
+
     })
 })
 
