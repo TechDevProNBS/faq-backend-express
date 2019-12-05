@@ -13,8 +13,17 @@ router.use(function (req, res, next) {
     next()
 })
 
-//get requests for answers in order of highest rating
+//GET REQUEST FOR NUMBER OF ANSWERS A QUESTION HAS
+router.get('/CountA/:q_id', function (req, res) {
+    let q_id = req.params.q_id
+    con.connect(function (err) {
+        con.query(`select count(a_id) from answers where q_id = ${q_id}`, function (err, results) {
+            res.send(results)
+        })
+    })
+})
 
+//GET REQUEST FOR ANSWERS IN ORDER OF HIGHEST RATING
 router.get('/RecentA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -24,11 +33,9 @@ router.get('/RecentA/:q_id', function (req, res) {
     })
 })
 
-//Delete requests for answers DELETING FROM RATING TABLE FIRST
-router.get('/DelA/:a_id', function (req, res) {
-    console.log("testing")
+//DELETE REQUESTS FOR ANSWERS, DELETING FROM RATING TABLE FIRST
+router.delete('/DelA/:a_id', function (req, res) {
     let a_id = req.params.a_id
-    console.log(a_id);
     con.connect(function (err) {
         con.query(`delete from comments where a_id = ${a_id}`, function (err, results) {
         })
@@ -40,7 +47,7 @@ router.get('/DelA/:a_id', function (req, res) {
     })
 })
 
-//put request for answers
+//PUT REQUEST FOR ANSWERS
 router.put('/UpdateA', function (req, res) {
     let updA = req.body.updA
     let a_id = req.body.a_id
@@ -70,7 +77,5 @@ router.post('/PostA', function (req, res) {
 
     })
 })
-
-
 
 module.exports = router
