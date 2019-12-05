@@ -6,10 +6,7 @@ var router = express.Router();
 var cors = require("cors");
 var con = mysqlQ();
 var app = express();
-app.use(session({ secret: 'Secretses Hobbitses' }));
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true }));
-app.use(cors());
+
 
 router.use(function (req, res, next) {
     console.log("answers main route")
@@ -37,9 +34,11 @@ router.get('/RecentA/:q_id', function (req, res) {
 })
 
 //DELETE REQUESTS FOR ANSWERS, DELETING FROM RATING TABLE FIRST
-router.delete('/DelA', function (req, res) {
-    let a_id = req.body.a_id
+router.delete('/DelA/:a_id', function (req, res) {
+    let a_id = req.params.a_id
     con.connect(function (err) {
+        con.query(`delete from comments where a_id = ${a_id}`, function (err, results) {
+        })
         con.query(`delete from answerrating where a_id = ${a_id}`, function (err, results) {
         })
         con.query(`delete from answers where a_id = ${a_id}`, function (err, results) {
