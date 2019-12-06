@@ -51,6 +51,8 @@ router.delete('/DelA/:a_id', function (req, res) {
 router.put('/UpdateA', function (req, res) {
     let updA = req.body.updA
     let a_id = req.body.a_id
+    console.log(updA + " " + a_id )
+    console.log(updA +" " + a_id)
     con.connect(function (err) {
         con.query(`Update answers SET answer = "${updA}" WHERE a_id = ${a_id}`, function (err, results) {
             res.send(results)

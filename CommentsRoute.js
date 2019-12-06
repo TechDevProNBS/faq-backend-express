@@ -40,11 +40,19 @@ router.put('/UpdateC',function(req,res){
 })
 
 //GET REQUEST FOR COMMENTS
-router.get('/GetC/:a_id',function(req,res){
-    let a_id = req.params.a_id
+router.get('/GetC/:q_id',function(req,res){
+    let q_id = req.params.q_id
     con.connect(function(err){
-        con.query(`select * from comments where a_id = ${a_id}`,function(err,results){
-            res.send(results)
+        con.query(`select a_id from answers where q_id = ${q_id}`,function(err,results){
+          var a_id = []
+          results.forEach(element => {
+              a_id.push(element.a_id)
+          });
+          console.log(a_id)
+            con.query(`select * from comments where a_id in (${a_id})`,function(err,results){
+                if(err){console.log(err)}
+                res.send(results)
+            }) 
         })
     })
 })
