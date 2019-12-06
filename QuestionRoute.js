@@ -35,8 +35,6 @@ router.get('/SearchQ/:query', function (req, res) {
 
     }
     url = url + `as hits FROM questions q HAVING hits > 0 ORDER by hits DESC`
-
-    console.log(url)
     con.connect(function (err) {
         con.query(url, function (err, results) {
             res.send(results)
@@ -121,7 +119,7 @@ router.put('/UpdateQ', function (req, res) {
 
 
 
-const filterCheck = ["the", "is", "this", "and", "why", "a", "our", "there", "theirs", "what", "where", "when"]
+const filterCheck = ["the", "is", "this", "and", "why", "a", "our", "there", "theirs", "what", "where", "when","to"]
 
 
 module.exports = router
