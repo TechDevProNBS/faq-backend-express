@@ -56,7 +56,7 @@ router.get('/RecentQ', function (req, res) {
 //get request for questions with no answers
 router.get('/UnansweredQ', function (req, res) {
     con.connect(function (err) {
-        con.query(`select * from questions q LEFT JOIN answers a ON q.q_id = a.q_id where a.q_id IS NULL ORDER by postdate_Q desc LIMIT 5`, function (err, results) {
+        con.query(`select q.* from questions q LEFT JOIN answers a ON q.q_id = a.q_id where a.q_id IS NULL ORDER by postdate_Q desc LIMIT 5`, function (err, results) {
             if (err) { console.log("inside query" + err) }
             res.send(results)
         })
