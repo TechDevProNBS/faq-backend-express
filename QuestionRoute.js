@@ -22,24 +22,25 @@ router.use(function (req, res, next) {
 
 
 
-router.get('/SearchQ/:query', function (req, res) {
+router.get('/SearchQ/:query', function (req, res) {    
     let stringSearch = req.params.query
     let word = stringSearch.split(' ')
     word = word.filter(function (item) {
         return !filterCheck.includes(item);
     })
-    let url = `select * from questions where question like '% ${word[0]}%'`
-    for (let i = 1; i < word.length; i++) {
-        url = url + ` or question like '% ${word[i]}%'`
+    let url = `select q.*,((question LIKE '% ${word[0]}%') +`
+    for (var i = 1; i <= word.length; i++) {
+        if (i < word.length - 1) { url = url + ` (question LIKE '% ${word[i]}%') +` }
+        else if (i == word.length) { url = url + ` (question LIKE '% ${word[i - 1]}%'))` }
+
     }
+    url = url + `as hits FROM questions q HAVING hits > 0 ORDER by hits DESC`
+
     console.log(url)
     con.connect(function (err) {
         con.query(url, function (err, results) {
-            console.log("it worked " + results)
             res.send(results)
         })
-
-
     })
 })
 
@@ -120,7 +121,7 @@ router.put('/UpdateQ', function (req, res) {
 
 
 
-const filterCheck = ["the", "is", "this", "and", "why", "a", "our"]
+const filterCheck = ["the", "is", "this", "and", "why", "a", "our", "there", "theirs", "what", "where", "when"]
 
 
 module.exports = router
