@@ -40,8 +40,8 @@ router.put('/UpdateC',function(req,res){
 })
 
 //GET REQUEST FOR COMMENTS
-router.get('/GetC',function(req,res){
-    let a_id = req.body.a_id
+router.get('/GetC/:a_id',function(req,res){
+    let a_id = req.params.a_id
     con.connect(function(err){
         con.query(`select * from comments where a_id = ${a_id}`,function(err,results){
             res.send(results)
@@ -50,8 +50,8 @@ router.get('/GetC',function(req,res){
 })
 
 //DELETE REQUEST FOR COMMENTS
-router.delete('/DelC',function(req,res){
-    let c_id = req.body.c_id
+router.delete('/DelC/:c_id',function(req,res){
+    let c_id = req.params.c_id
     con.connect(function(err){
         con.query(`delete from comments where c_id = ${c_id}`,function(err, results){
             res.send(results)
