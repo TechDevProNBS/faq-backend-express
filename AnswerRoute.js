@@ -17,7 +17,7 @@ router.use(function (req, res, next) {
 router.get('/CountA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
-        con.query(`select count(a_id) from answers where q_id = ${q_id}`, function (err, results) {
+        con.query(`select count(a_id) as hits from answers where q_id = ${q_id}`, function (err, results) {
             res.send(results)
         })
     })
