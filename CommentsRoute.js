@@ -49,7 +49,7 @@ router.get('/GetC/:q_id',function(req,res){
               a_id.push(element.a_id)
           });
           console.log(a_id)
-            con.query(`select * from comments where a_id in (${a_id})`,function(err,results){
+            con.query(`select *, Date_format(postdate_C,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_C, "%H:%i:%s") as niceTime from comments where a_id in (${a_id})`,function(err,results){
                 if(err){console.log(err)}
                 res.send(results)
             }) 
