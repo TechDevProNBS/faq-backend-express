@@ -28,7 +28,7 @@ router.get('/SearchQ/:query', function (req, res) {
     word = word.filter(function (item) {
         return !filterCheck.includes(item);
     })
-    let url = `select q.*,((question LIKE '% ${word[0]}%') +`
+    let url = `select q.*,Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime, ((question LIKE '% ${word[0]}%') +`
     for (var i = 1; i <= word.length; i++) {
         if (i < word.length - 1) { url = url + ` (question LIKE '% ${word[i]}%') +` }
         else if (i == word.length) { url = url + ` (question LIKE '% ${word[i - 1]}%'))` }
@@ -46,7 +46,9 @@ router.get('/SearchQ/:query', function (req, res) {
 
 router.get('/RecentQ', function (req, res) {
     con.connect(function (err) {
-        con.query(`select question, q_id from questions ORDER BY postdate_Q desc LIMIT 5`, function (err, results) {
+        con.query(`select *, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions ORDER BY postdate_Q desc LIMIT 5`, function (err, results) {
+           if(err){console.log(err)}
+           console.log(results)
             res.send(results)
         })
 
@@ -56,7 +58,7 @@ router.get('/RecentQ', function (req, res) {
 //get request for questions with no answers
 router.get('/UnansweredQ', function (req, res) {
     con.connect(function (err) {
-        con.query(`select q.* from questions q LEFT JOIN answers a ON q.q_id = a.q_id where a.q_id IS NULL ORDER by postdate_Q desc LIMIT 5`, function (err, results) {
+        con.query(`select q.*, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions q LEFT JOIN answers a ON q.q_id = a.q_id where a.q_id IS NULL ORDER by postdate_Q desc LIMIT 5`, function (err, results) {
             if (err) { console.log("inside query" + err) }
             res.send(results)
         })
@@ -66,7 +68,7 @@ router.get('/UnansweredQ', function (req, res) {
 //get request for questions with highest rating and ordered H-L
 router.get('/TopRatedQ', function (req, res) {
     con.connect(function (err) {
-        con.query(`select * from questions q LEFT JOIN questionrating qr ON q.q_id = qr.q_id WHERE qr.q_id IS NOT NULL ORDER by qr.rating desc LIMIT 5`, function (err, results) {
+        con.query(`select *, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions q LEFT JOIN questionrating qr ON q.q_id = qr.q_id WHERE qr.q_id IS NOT NULL ORDER by qr.rating desc LIMIT 5`, function (err, results) {
             if (err) { console.log("inside query" + err) }
             res.send(results)
         })
