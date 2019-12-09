@@ -22,7 +22,7 @@ router.use(function (req, res, next) {
 
 
 
-router.get('/SearchQ/:query', function (req, res) {    
+router.get('/SearchQ/:query', function (req, res) {
     let stringSearch = req.params.query
     let word = stringSearch.split(' ')
     word = word.filter(function (item) {
@@ -74,15 +74,32 @@ router.get('/TopRatedQ', function (req, res) {
 })
 
 //DELETE REQUEST FOR QUESTIONS DELETING FROM RATING TABLE FIRST
-router.delete('/DelQ', function (req, res) {
-    let q_id = req.body.q_id
+router.delete('/DelQ/:q_id', function (req, res) {
+    let q_id = req.params.q_id
     con.connect(function (err) {
         con.query(`delete from questionrating where q_id = ${q_id}`, function (err, results) {
+            if(err){console.log("QR"+err)}
 
+            con.query(`select a_id from answers where q_id = ${q_id}`, function (err, results) {
+                if(err){console.log("selectA"+err)}
+                var a_id = []
+                results.forEach(element => {
+                    a_id.push(element.a_id)
+                });
+                con.query(`delete from answerrating where a_id in (${a_id})`, function (err, results) {
+                    if(err){console.log("AR"+err)}
+                    con.query(`delete from answers where q_id = ${q_id}`, function (err, results) {
+
+                        if(err){console.log("A"+err)}
+                        con.query(`delete from questions where q_id = ${q_id}`, function (err, results) {
+                            if(err){console.log("Q"+err)}
+                            res.send({ response: "question deleted" })
+                        })
+                    })
+                })
+            })
         })
-        con.query(`delete from questions where q_id = ${q_id}`, function (err, results) {
-            res.send({ response: "question deleted" })
-        })
+
     })
 })
 
