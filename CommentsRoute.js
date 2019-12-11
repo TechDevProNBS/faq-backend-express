@@ -21,6 +21,7 @@ router.post('/PostC',function(req,res){
     let comment = req.body.comment
     let userID = req.body.userID
     let a_id = req.body.a_id
+    console.log(comment)
     con.connect(function(err){
         con.query(`insert into comments values(0,'${comment}',${userID},${a_id},CURRENT_TIMESTAMP())`,function(err, results){
             res.send(results)

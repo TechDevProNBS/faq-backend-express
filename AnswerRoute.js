@@ -72,7 +72,7 @@ router.post('/PostA', function (req, res) {
             res.send(results)
             returnedID = results.insertId
             console.log(returnedID)
-            con.query(`insert into answerrating values(${returnedID},${u_id},0,current_timestamp())`, function (err, results) {
+            con.query(`insert into answerrating values(${returnedID},${u_id},0)`, function (err, results) {
                 if (err) { console.log }
             })
         })
