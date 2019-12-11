@@ -10,18 +10,25 @@ app.use(session({ secret: 'Secretses Hobbitses' }));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
+/**This code provides functionality to access questions from the backend. Requests include:
+ * -Most recent questions
+ * -Questions with no answers
+ * -Qustsions in order of ratings
+ * -Delete question
+ * -Post qustion
+ * -Put question
+*/
 
 router.use(function (req, res, next) {
     console.log("questions main route")
     next()
 })
-//GET REQUESTS FOR QUESTIONS
-//get request for most recent questions
 
-
-
-
-
+/**GET REQUEST FOR MOST RECENT QUESTIONS
+ * @method GET
+ * Also provides a search functionality
+ * Search functionality omits basic words such as "the", "and", "is"
+*/
 router.get('/SearchQ/:query', function (req, res) {
     let stringSearch = req.params.query
     let word = stringSearch.split(' ')
@@ -44,6 +51,9 @@ router.get('/SearchQ/:query', function (req, res) {
     })
 })
 
+/** GET REQUEST FOR QUESTIONS IN ORDER OF POSTED DATE
+ * @method GET 
+ */
 router.get('/RecentQ', function (req, res) {
     con.connect(function (err) {
         con.query(`select *, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions ORDER BY postdate_Q desc LIMIT 5`, function (err, results) {
@@ -55,7 +65,11 @@ router.get('/RecentQ', function (req, res) {
     })
 })
 
-//get request for questions with no answers
+/**
+ * GET REQUEST FOR QUESTIONS WITH NO ANSWERS
+ * @method GET
+ * Maximum 5 answers are displayed
+ */
 router.get('/UnansweredQ', function (req, res) {
     con.connect(function (err) {
         con.query(`select q.*, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions q LEFT JOIN answers a ON q.q_id = a.q_id where a.q_id IS NULL ORDER by postdate_Q desc LIMIT 5`, function (err, results) {
@@ -65,7 +79,10 @@ router.get('/UnansweredQ', function (req, res) {
     })
 })
 
-//get request for questions with highest rating and ordered H-L
+/**GET REQUEST FOR QUESTIONS WITH HIGHEST RATING
+ * @method GET
+ * ordered from highest to lowest
+ */
 router.get('/TopRatedQ', function (req, res) {
     con.connect(function (err) {
         con.query(`select *, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions q LEFT JOIN questionrating qr ON q.q_id = qr.q_id WHERE qr.q_id IS NOT NULL ORDER by qr.rating desc LIMIT 5`, function (err, results) {
@@ -75,7 +92,11 @@ router.get('/TopRatedQ', function (req, res) {
     })
 })
 
-//DELETE REQUEST FOR QUESTIONS DELETING FROM RATING TABLE FIRST
+/** DELETE REQUEST FOR QUESTIONS
+ * @method DELETE
+ * @param {int} q_id question ID
+ * deletes from the question rating, and then every corresponding answer and answer rating tables first because of primary key links
+ */
 router.delete('/DelQ/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -101,13 +122,16 @@ router.delete('/DelQ/:q_id', function (req, res) {
                 })
             })
         })
-
     })
 })
 
 
-//POST RREQUEST FOR QUESTIONS
-
+/**POST REQUEST FOR QUESTIONS
+ * @method POST
+ * @param {string} question question
+ * @param {int} userID user ID
+ * records the time the question is posted as timestamp
+ */
 router.post('/PostQ', function (req, res) {
 
     let question = req.body.question
@@ -123,10 +147,14 @@ router.post('/PostQ', function (req, res) {
             })
         })
     })
-
 })
 
-//PUT REQUEST FOR QUESTIONS
+/**PUT REQUEST FOR QUESTIONS
+ * @method PUT
+ * @param {string} updQ new question
+ * @param {int} q_id question ID
+ */
+
 router.put('/UpdateQ', function (req, res) {
     let updQ = req.body.updQ
     let q_id = req.body.q_id

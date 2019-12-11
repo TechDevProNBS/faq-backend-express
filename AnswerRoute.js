@@ -7,13 +7,23 @@ var cors = require("cors");
 var con = mysqlQ();
 var app = express();
 
-
+/** 
+ * This code provides functionality to access answers from the backend. Requests include:
+ * -Corresponding answers to a question
+ * -Answers in order of rating
+ * -Delete answer
+ * -Post answer
+ * -Put answer
+ *  */
 router.use(function (req, res, next) {
     console.log("answers main route")
     next()
 })
 
-//GET REQUEST FOR NUMBER OF ANSWERS A QUESTION HAS
+/**GET REQUEST FOR ANSWERS
+ * @method GET
+ * @param {int} q_id question ID
+*/
 router.get('/CountA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -23,7 +33,10 @@ router.get('/CountA/:q_id', function (req, res) {
     })
 })
 
-//GET REQUEST FOR ANSWERS IN ORDER OF HIGHEST RATING
+/**GET REQUEST FOR ANSWERS IN ORDER OF HIGHEST RATING
+ * @method GET
+ * @param {int} q_id question ID
+ */
 router.get('/RecentA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -33,7 +46,11 @@ router.get('/RecentA/:q_id', function (req, res) {
     })
 })
 
-//DELETE REQUESTS FOR ANSWERS, DELETING FROM RATING TABLE FIRST
+/**DELETE REQUESTS FOR ANSWERS
+ * @method DELETE
+ * @param {int} a_id answer ID
+ * deletes from the comments table and then the ratings table first because of the primary key links
+ */
 router.delete('/DelA/:a_id', function (req, res) {
     let a_id = req.params.a_id
     con.connect(function (err) {
@@ -47,7 +64,11 @@ router.delete('/DelA/:a_id', function (req, res) {
     })
 })
 
-//PUT REQUEST FOR ANSWERS
+/**PUT REQUEST FOR ANSWERS 
+ * @method PUT
+ * @param {string} updA new comment to replace the existing one
+ * @param {int} a_id answer ID
+*/
 router.put('/UpdateA', function (req, res) {
     let updA = req.body.updA
     let a_id = req.body.a_id
@@ -60,7 +81,12 @@ router.put('/UpdateA', function (req, res) {
     })
 })
 
-//POST REQUEST FOR ANSWERS
+/**POST REQUEST FOR ANSWERS 
+ * @method POST
+ * @param {string} answer answer itself to be posted
+ * @param {int} q_id question ID
+ * @param {int} u_id user ID
+*/
 router.post('/PostA', function (req, res) {
     let answer = req.body.answer
     let q_id = req.body.q_id

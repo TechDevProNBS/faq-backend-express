@@ -11,12 +11,26 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cors());
 
+/**
+ * This code provides functionality to access comments from the backend. Requests include:
+ * -Post comment
+ * -Put comment
+ * -Get comment
+ * -Delete comment
+ * All of these requests will send a query directly to the SQL comments table
+ */
+
 router.use(function (req, res, next) {
     console.log("Comments main route")
     next()
 })
 
-//POST REQUEST FOR COMMENTS
+/**POST REQUEST FOR COMMENTS
+ * @method POST
+ * @param {string} comment this is the comment itself
+ * @param {int} u_ID user id
+ * @param {int} a_ID answer id
+*/
 router.post('/PostC',function(req,res){
     let comment = req.body.comment
     let userID = req.body.userID
@@ -27,7 +41,11 @@ router.post('/PostC',function(req,res){
         })
     })
 })
-//PUT REQUEST FOR COMMENTS
+/**PUT REQUEST FOR COMMENTS
+ * @method PUT
+ * @param {int} c_id comment ID
+ * @param {string} updC the comment itself to replace the old one
+ */
 router.put('/UpdateC',function(req,res){
     let updC = req.body.updC
     let c_id = req.body.c_id
@@ -39,7 +57,11 @@ router.put('/UpdateC',function(req,res){
     })
 })
 
-//GET REQUEST FOR COMMENTS
+/**GET REQUEST FOR COMMENTS
+ * @method GET 
+ * @param {int} q_id questionID
+ * gets the date from the sql database and displays in a nicer format
+*/
 router.get('/GetC/:q_id',function(req,res){
     let q_id = req.params.q_id
     con.connect(function(err){
@@ -57,7 +79,10 @@ router.get('/GetC/:q_id',function(req,res){
     })
 })
 
-//DELETE REQUEST FOR COMMENTS
+/**DELETE REQUEST FOR COMMENTS 
+ * @method DELETE
+ * @param {int} c_id commentID
+*/
 router.delete('/DelC/:c_id',function(req,res){
     let c_id = req.params.c_id
     con.connect(function(err){
