@@ -4,4 +4,4 @@ COPY package-lock.json* ./
 
 RUN npm cache clean --force && npm install
 
-CMD ["node Express.js"]
+CMD [ "node", "Express.js" ]
