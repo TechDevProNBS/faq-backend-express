@@ -27,7 +27,7 @@ router.get('/CountA/:q_id', function (req, res) {
 router.get('/RecentA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
-        con.query(`select * from answers a LEFT JOIN answerrating ar ON a.a_id = ar.a_id WHERE a.q_id = ${q_id} ORDER by ar.rating desc`, function (err, results) {
+        con.query(`select *,Date_format(postdate_A,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_A, "%H:%i:%s") as niceTime from answers a LEFT JOIN answerrating ar ON a.a_id = ar.a_id WHERE a.q_id = ${q_id} ORDER by ar.rating desc`, function (err, results) {
             res.send(results)
         })
     })
