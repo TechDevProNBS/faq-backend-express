@@ -11,7 +11,7 @@ var con = mysql.createConnection({
                                 "port":"3306",
                                  "host":database.host,
                                  "user":database.user,
-                                 "password":database.password,
+                                 "password":"volvoS40",
                                   "database":database.name
                                 })
 

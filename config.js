@@ -45,9 +45,9 @@ module.exports = {
         'node_port': 3000,
         'json_indentation': 4,
         'database': {
-            'name': 'nationwide',
-            'host': 'localhost',
-            'user': 'root'
+            'name': 'groupproject',
+            'host': 'faq-database.mysql.database.azure.com',
+            'user': 'faq@faq-database'
         }
     }
 }
