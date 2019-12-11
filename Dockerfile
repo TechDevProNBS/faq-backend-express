@@ -1,6 +1,6 @@
 FROM node:12.13
 
-COPY package-lock.json* ./
+COPY . .
 
 RUN npm cache clean --force && npm install
 
