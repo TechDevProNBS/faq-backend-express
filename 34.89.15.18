@@ -9,9 +9,9 @@ module.exports = {
         'json_indentation': 4,
         'database': {
             'name': 'groupproject',
-            'host': '',
+            'host': 'faq-database.mysql.database.azure.com',
             'user': 'faq@faq-database',
-            'password':''
+            'password':'volvoS40'
         }
     },
     'testing': {

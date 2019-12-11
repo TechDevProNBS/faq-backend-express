@@ -11,13 +11,13 @@ var con = mysql.createConnection({
                                 "port":"3306",
                                  "host":database.host,
                                  "user":database.user,
-                                 "password":"volvoS40",
+                                 "password":databse.password,
                                   "database":database.name
                                 })
 
 con.connect(function(err){
     if(err) {
-        console.log("Error in Connection");
+        console.log("Error in Connection" + err);
     }
     else {
         console.log("Connected!");
