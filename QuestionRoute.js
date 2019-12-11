@@ -23,7 +23,6 @@ router.use(function (req, res, next) {
     console.log("questions main route")
     next()
 })
-
 /**GET REQUEST FOR MOST RECENT QUESTIONS
  * @method GET
  * Also provides a search functionality
@@ -57,18 +56,16 @@ router.get('/SearchQ/:query', function (req, res) {
 router.get('/RecentQ', function (req, res) {
     con.connect(function (err) {
         con.query(`select *, Date_format(postdate_Q,'%d/%m/%Y') as niceDate, TIME_FORMAT(postdate_Q, "%H:%i:%s") as niceTime from questions ORDER BY postdate_Q desc LIMIT 5`, function (err, results) {
-           if(err){console.log(err)}
-           console.log(results)
+            if (err) { console.log(err) }
+            console.log(results)
             res.send(results)
         })
 
     })
 })
 
-/**
- * GET REQUEST FOR QUESTIONS WITH NO ANSWERS
+/**GET REQUEST FOR QUESTIONS WITH NO ANSWERS
  * @method GET
- * Maximum 5 answers are displayed
  */
 router.get('/UnansweredQ', function (req, res) {
     con.connect(function (err) {
@@ -81,7 +78,7 @@ router.get('/UnansweredQ', function (req, res) {
 
 /**GET REQUEST FOR QUESTIONS WITH HIGHEST RATING
  * @method GET
- * ordered from highest to lowest
+ * ordered by rating from highest to lowest
  */
 router.get('/TopRatedQ', function (req, res) {
     con.connect(function (err) {
@@ -92,30 +89,29 @@ router.get('/TopRatedQ', function (req, res) {
     })
 })
 
-/** DELETE REQUEST FOR QUESTIONS
+/**DELETE REQUEST FOR QUESTIONS DELETING FROM RATING TABLE FIRST
  * @method DELETE
  * @param {int} q_id question ID
- * deletes from the question rating, and then every corresponding answer and answer rating tables first because of primary key links
  */
 router.delete('/DelQ/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
         con.query(`delete from questionrating where q_id = ${q_id}`, function (err, results) {
-            if(err){console.log("QR"+err)}
+            if (err) { console.log("QR" + err) }
 
             con.query(`select a_id from answers where q_id = ${q_id}`, function (err, results) {
-                if(err){console.log("selectA"+err)}
+                if (err) { console.log("selectA" + err) }
                 var a_id = []
                 results.forEach(element => {
                     a_id.push(element.a_id)
                 });
                 con.query(`delete from answerrating where a_id in (${a_id})`, function (err, results) {
-                    if(err){console.log("AR"+err)}
+                    if (err) { console.log("AR" + err) }
                     con.query(`delete from answers where q_id = ${q_id}`, function (err, results) {
 
-                        if(err){console.log("A"+err)}
+                        if (err) { console.log("A" + err) }
                         con.query(`delete from questions where q_id = ${q_id}`, function (err, results) {
-                            if(err){console.log("Q"+err)}
+                            if (err) { console.log("Q" + err) }
                             res.send({ response: "question deleted" })
                         })
                     })
@@ -127,11 +123,11 @@ router.delete('/DelQ/:q_id', function (req, res) {
 
 
 /**POST REQUEST FOR QUESTIONS
- * @method POST
- * @param {string} question question
- * @param {int} userID user ID
- * records the time the question is posted as timestamp
+ *@method POST
+ *@param {string} question question itself
+ *@param {int} userID userID
  */
+
 router.post('/PostQ', function (req, res) {
 
     let question = req.body.question
@@ -154,7 +150,6 @@ router.post('/PostQ', function (req, res) {
  * @param {string} updQ new question
  * @param {int} q_id question ID
  */
-
 router.put('/UpdateQ', function (req, res) {
     let updQ = req.body.updQ
     let q_id = req.body.q_id
