@@ -39,6 +39,7 @@ router.get('/SearchQ/:query', function (req, res) {
     console.log(url)
     con.connect(function (err) {
         con.query(url, function (err, results) {
+            console.log(results)
             res.send(results)
         })
     })
@@ -88,6 +89,9 @@ router.delete('/DelQ/:q_id', function (req, res) {
                 results.forEach(element => {
                     a_id.push(element.a_id)
                 });
+                con.query(`delete from comments where a_id in (${a_id})`,function(err,results){
+
+                
                 con.query(`delete from answerrating where a_id in (${a_id})`, function (err, results) {
                     if(err){console.log("AR"+err)}
                     con.query(`delete from answers where q_id = ${q_id}`, function (err, results) {
@@ -96,6 +100,7 @@ router.delete('/DelQ/:q_id', function (req, res) {
                         con.query(`delete from questions where q_id = ${q_id}`, function (err, results) {
                             if(err){console.log("Q"+err)}
                             res.send({ response: "question deleted" })
+                        })
                         })
                     })
                 })
@@ -118,7 +123,7 @@ router.post('/PostQ', function (req, res) {
             if (err) { console.log(err) }
             res.send(results)
             returnedID = results.insertId
-            con.query(`insert into questionrating values(${returnedID},${userID},0,CURRENT_TIMESTAMP())`, function (err, results) {
+            con.query(`insert into questionrating values(${returnedID},${userID},0)`, function (err, results) {
                 if (err) { console.log(err) }
             })
         })
