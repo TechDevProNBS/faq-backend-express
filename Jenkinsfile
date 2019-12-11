@@ -9,6 +9,7 @@ pipeline {
         }
         stage('Building FAQS Backend Express') {
             steps {
+            sh 'cp -f ~/config/config.js ./config.js'
             sh 'cp -f ~/config/config.json ./config.json'
 		    sh 'docker build -t="rakimsv/faqs-backend-express:latest" .'
             }
