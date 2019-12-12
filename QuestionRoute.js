@@ -15,12 +15,17 @@ router.use(function (req, res, next) {
     console.log("questions main route")
     next()
 })
-//GET REQUESTS FOR QUESTIONS
-//get request for most recent questions
+//GET REQUESTS FOR QUESTIONS AND SEARCH
 
 
-
-
+/**
+ * the search function takes the vody of text sent by the front end (front end filters special characters)
+ * it then splits the array where there are spaces and creates another.
+ * it create a basic url and will then add extra statements to the end for each word in the new array.
+ * it will then send the full url to the database which will search for any questions that contain certain words.
+ * i have inluded a space before each word to prevent searches like 'hr' returning a word that contains this string such as 'tHRee'
+ * this is oli's favourite backend API
+ */
 
 router.get('/SearchQ/:query', function (req, res) {
     let stringSearch = req.params.query
@@ -44,6 +49,13 @@ router.get('/SearchQ/:query', function (req, res) {
         })
     })
 })
+
+/**
+ * the below three request will just return the questions for the main page, limiting it to 5 per heading.
+ * we have used date format and time format so the date and time for posting display in a user friendly manner
+ * in the bottom two we have used left join to allow us to interogate more than one table at a time
+ * this is used to determine which questions have no correspnding answer in the answer table (using foreign keys)
+ */
 
 router.get('/RecentQ', function (req, res) {
     con.connect(function (err) {
@@ -76,7 +88,18 @@ router.get('/TopRatedQ', function (req, res) {
     })
 })
 
+
+
 //DELETE REQUEST FOR QUESTIONS DELETING FROM RATING TABLE FIRST
+
+/**
+ * this query will delete all records relating to a particular questions based on the q_id
+ * it first removes the equivalent question rating
+ * then it will find all answer id's that relate to a specific questions
+ * this allows us to remove all comments with the same a_id, all answer ratings and finally answers
+ * we can then delete the question itself. it has to be in this order due to foreign key constraints in mysql.
+ *
+ */
 router.delete('/DelQ/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -113,6 +136,10 @@ router.delete('/DelQ/:q_id', function (req, res) {
 
 //POST RREQUEST FOR QUESTIONS
 
+/**
+ * the below two queries will post to and update questions in the database using bodys of data sent by front end.
+ */
+
 router.post('/PostQ', function (req, res) {
 
     let question = req.body.question
@@ -144,6 +171,10 @@ router.put('/UpdateQ', function (req, res) {
 
 
 
+
+/** 
+ * this is just an array of words that will be filtered from any search query to prevent unwanted questions being returned.
+ */
 
 const filterCheck = ["the", "is", "this", "and", "why", "a", "our", "there", "theirs", "what", "where", "when"]
 

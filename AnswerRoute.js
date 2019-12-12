@@ -13,7 +13,13 @@ router.use(function (req, res, next) {
     next()
 })
 
+
+
 //GET REQUEST FOR NUMBER OF ANSWERS A QUESTION HAS
+
+/** 
+ * this method counts the number of answers relating to a specific q_id - is is sent back as hits as javascript does not like count(a_id) believeing it to be a function rather than data
+ */
 router.get('/CountA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -24,6 +30,9 @@ router.get('/CountA/:q_id', function (req, res) {
 })
 
 //GET REQUEST FOR ANSWERS IN ORDER OF HIGHEST RATING
+/**
+ * sends answers to front end and orders them by highest rating in answer table - uses left join to determine corresponding values in tables.
+ */
 router.get('/RecentA/:q_id', function (req, res) {
     let q_id = req.params.q_id
     con.connect(function (err) {
@@ -33,7 +42,12 @@ router.get('/RecentA/:q_id', function (req, res) {
     })
 })
 
+
+
 //DELETE REQUESTS FOR ANSWERS, DELETING FROM RATING TABLE FIRST
+/**
+ * similar to deleting a question it will delete from tables that include foreign keys first to prevent erros and then remove the answer.
+ */
 router.delete('/DelA/:a_id', function (req, res) {
     let a_id = req.params.a_id
     con.connect(function (err) {
@@ -61,6 +75,10 @@ router.put('/UpdateA', function (req, res) {
 })
 
 //POST REQUEST FOR ANSWERS
+/**
+ * this will post a new answer and will create a correpsonding answer rating of 0 entry in the other table.
+ * this is to ensure each answer has a rating regardless of its value to prevent errors when mapping answers on front end.
+ */
 router.post('/PostA', function (req, res) {
     let answer = req.body.answer
     let q_id = req.body.q_id

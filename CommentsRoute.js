@@ -16,6 +16,9 @@ router.use(function (req, res, next) {
     next()
 })
 
+/**
+ * the below two queries just post new comments and update existing comments on request.
+ */
 //POST REQUEST FOR COMMENTS
 router.post('/PostC',function(req,res){
     let comment = req.body.comment
@@ -41,6 +44,12 @@ router.put('/UpdateC',function(req,res){
 })
 
 //GET REQUEST FOR COMMENTS
+
+/**
+ * this will send all comments relating to a specific answer id to the front end - it recieves a q_id
+ * it then searches the answer table for all answers with the q_id and pushes the a_id into a new array
+ * the new array is then used to grab all comments for all answers in the array.
+ */
 router.get('/GetC/:q_id',function(req,res){
     let q_id = req.params.q_id
     con.connect(function(err){
@@ -57,6 +66,10 @@ router.get('/GetC/:q_id',function(req,res){
         })
     })
 })
+
+/**
+ * this delated a comment by checking the c_id
+ */
 
 //DELETE REQUEST FOR COMMENTS
 router.delete('/DelC/:c_id',function(req,res){
